@@ -1,0 +1,7 @@
+-- inventario.tipo_insumo definition
+
+CREATE TABLE `tipo_insumo` (
+  `id_tipo_insumo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre_tipo_insumo` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_tipo_insumo`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
