@@ -1,0 +1,2 @@
+<iframe id="iframe" src="https://pweb.impuestos.gob.bo/Autenticacion/index.xhtml" width="100%" height="320" scrolling="si" frameborder="0" "allow-same-origin"></iframe>
+<iframe src="https://pweb.impuestos.gob.bo/Autenticacion/index.xhtml" name="myIFrame" scrolling="auto" width="100%" height="100%" style="border: 0px none #000000;"></iframe>
