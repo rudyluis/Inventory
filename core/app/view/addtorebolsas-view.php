@@ -17,7 +17,7 @@ if (!isset($_SESSION["reabastecer_bolsas"])) {
     $found = false;
     $cart = $_SESSION["reabastecer_bolsas"];
     $index = 0;
-
+    echo('hola');
     $can = true;
 
     if ($can == true) {

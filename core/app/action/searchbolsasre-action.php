@@ -28,6 +28,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <input type="hidden" name="bolsa_id" value="<?php echo $bolsa->id_bolsas; ?>">
+                                <input type="hidden" name="precio_compra_unidad" value="<?php echo $bolsa->precio_compra_unidad; ?>">
                                 <input type="text" class="form-control" required name="q" id="re_q<?php echo $bolsa->id_bolsas; ?>" placeholder="Cantidad ...">
                             </div>
                             <div class="col-md-4">
@@ -41,6 +42,7 @@
                 $("#addtore<?php echo $bolsa->id_bolsas; ?>").on("submit", function(e){
                     e.preventDefault();
                     $.post("./?view=addtorebolsas", $("#addtore<?php echo $bolsa->id_bolsas; ?>").serialize(), function(data){
+                        
                         $.get("./?action=cartofrebolsas", null, function(data2){
                             $("#cartofre").html(data2);
                         });

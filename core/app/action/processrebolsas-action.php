@@ -35,7 +35,7 @@ if(isset($_SESSION["reabastecer_bolsas"])){
 					$operation_type = 3; // 3.- entrada-pendiente 
 				}
 
-				$bolsa = BolsaData::getById($c["bolsa_id"]);
+				$bolsa = BolsasData::getById($c["bolsa_id"]);
 				if($bolsa->precio_compra_unidad != $c["precio_compra_unidad"]) {
 					$bolsa->precio_compra_unidad = $c["precio_compra_unidad"];
 					$bolsa->update_prices();
@@ -43,12 +43,13 @@ if(isset($_SESSION["reabastecer_bolsas"])){
 
 				$op = new OperationData();
 				$op->price_in = $bolsa->precio_compra_unidad;
+				$op->price_out = $bolsa->precio_compra_unidad;
 				$op->stock_id = $_POST["stock_id"];
-				$op->bolsa_id = $c["bolsa_id"];
+				$op->id_bolsa = $c["bolsa_id"];
 				$op->operation_type_id = $operation_type; // 1 - entrada
 				$op->sell_id = $s[1];
 				$op->q = $c["q"];
-				$add = $op->add();
+				$add = $op->addBolsa();
 			}
 
 			// Generando el mensaje
@@ -83,7 +84,7 @@ if(isset($_SESSION["reabastecer_bolsas"])){
 			$message .= "<table border='1'><thead><th>Id</th><th>Nombre</th><th>Cantidad</th><th>Precio de Compra Unidad</th><th>Precio Total</th></thead>";
 			foreach($cart as $c){
 				$message .= "<tr>";
-				$bolsa = BolsaData::getById($c["bolsa_id"]);
+				$bolsa = BolsasData::getById($c["bolsa_id"]);
 				$message .= "<td>" . $bolsa->id_bolsas . "</td>";
 				$message .= "<td>" . $bolsa->nombre_bolsas . "</td>";
 				$message .= "<td>" . $c["q"] . "</td>";

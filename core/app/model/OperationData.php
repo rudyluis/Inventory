@@ -2,9 +2,9 @@
 class OperationData {
 	public static $tablename = "operation";
 
-	public function OperationData(){
+	public function __construct(){
 		$this->name = "";
-		$this->product_id = "";
+		$this->product_id = "0";
 		$this->q = "";
 		$this->cut_id = "";
 		$this->status = "1";
@@ -12,11 +12,19 @@ class OperationData {
 		$this->operation_from_id = "NULL";
 		$this->created_at = "NOW()";
 		$this->is_traspase=0;
+		$this->id_bolsa="NULL";
 	}
 
 	public function add(){
 		$sql = "insert into ".self::$tablename." (is_traspase,status, price_in,price_out,stock_id,product_id,q,operation_type_id,sell_id,operation_from_id,created_at) ";
 		$sql .= "value ($this->is_traspase, $this->status, $this->price_in,$this->price_out,$this->stock_id,\"$this->product_id\",\"$this->q\",$this->operation_type_id,$this->sell_id,$this->operation_from_id,$this->created_at)";
+		//echo($sql);
+		return Executor::doit($sql);
+	}
+	public function addBolsa(){
+		$sql = "insert into ".self::$tablename." (is_traspase,status, price_in,price_out,stock_id,id_bolsa,product_id,q,operation_type_id,sell_id,operation_from_id,created_at) ";
+		$sql .= "value ($this->is_traspase, $this->status, $this->price_in,$this->price_out,$this->stock_id,\"$this->id_bolsa\",1,\"$this->q\",$this->operation_type_id,$this->sell_id,$this->operation_from_id,$this->created_at)";
+		//echo($sql);
 		return Executor::doit($sql);
 	}
 
