@@ -22,18 +22,34 @@ $stock = StockData::getById($_GET["stock"]);
   <li><a href="./?view=inventary&stock=<?php echo $stock->id; ?>"><?php echo $stock->name;?></a></li>
 </ol>
 
-
+<div class="clearfix">
+    <div class="box card">
+      <div class="col-md-12">
+          <label for="tipo_insumo">Tipo de Insumo:</label>
+          <select id="tipo_insumo" name="tipo_insumo" class="form-control">
+              <!-- Opciones cargadas dinámicamente -->
+              <option value="0">Seleccione...</option>
+              <option value="1">Productos</option>
+              <option value="2">Bolsas</option>
+          </select>
+        </div>
+    </div>
+</div>
+<br>
 <?php
 $products = ProductData::getAll();
 if(count($products)>0){
 	?>
-<div class="clearfix"></div>
-<div class="box">
-  <div class="box-header">
-    <h3 class="box-title">Inventario</h3>
 
+
+<div class="clearfix"></div>
+<div id="product_table" class="box">
+  <div class="box-header">
+    <h3 class="box-title">Inventario de Productos</h3>
   </div><!-- /.box-header -->
+
   <div class="box-body">
+    
   <table class="table table-bordered datatable table-hover">
 	<thead>
 		<th>Codigo</th>
@@ -90,18 +106,97 @@ if(count($products)>0){
 }
 
 ?>
+
+<?php
+$bolsas = BolsasData::getAll();
+if(count($bolsas) > 0) {
+    ?>
+
+<div class="clearfix"></div>
+<div id="bag_table" class="box" style="display:none;">
+  <div class="box-header">
+    <h3 class="box-title">Inventario de Bolsas</h3>
+  </div><!-- /.box-header -->
+
+  <div class="box-body">
+    
+  <table class="table table-bordered datatable table-hover">
+    <thead>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Por Recibir</th>
+        <th>Disponible</th>
+        <th>Por Entregar</th>
+        <th></th>
+    </thead>
+    <?php 
+    foreach($bolsas as $bolsa):
+        // Assuming you have equivalent methods for getting bolsa-specific stock data
+        $r = OperationData::getRByStock($bolsa->id_bolsas, $_GET["stock"]);
+        $q = OperationData::getQByStock($bolsa->id_bolsas, $_GET["stock"]);
+        $d = OperationData::getDByStock($bolsa->id_bolsas, $_GET["stock"]);
+    ?>
+    <tr class="<?php if($q <= $bolsa->cantidad_minima / 2) { echo "danger"; } else if($q <= $bolsa->cantidad_minima) { echo "warning"; } ?>">
+        <td><?php echo $bolsa->id_bolsas; // Assuming 'id_bolsas' is used as the code ?></td>
+        <td><?php echo $bolsa->nombre_bolsas; ?></td>
+        <td><?php echo $r; ?></td>
+        <td><?php echo $q; ?></td>
+        <td><?php echo $d; ?></td>
+        <td style="width:213px;">
+            <?php if(Core::$user->kind == 1): ?>
+                <a href="index.php?view=inventaryadd&bag_id=<?php echo $bolsa->id_bolsas; ?>&stock=<?php echo $_GET["stock"];?>" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-plus"></i> Agregar</a>
+                <a href="index.php?view=inventarysub&bag_id=<?php echo $bolsa->id_bolsas; ?>&stock=<?php echo $_GET["stock"];?>" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-minus"></i> Quitar</a>
+                <a href="index.php?view=history&bag_id=<?php echo $bolsa->id_bolsas; ?>&stock=<?php echo $_GET["stock"];?>" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-time"></i> Historial</a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+  </div><!-- /.box-body -->
+</div><!-- /.box -->
+
+<div class="clearfix"></div>
+
+<?php
+} else {
+?>
+    <div class="jumbotron">
+        <h2>No hay bolsas</h2>
+        <p>No se han agregado bolsas a la base de datos, puedes agregar una dando click en el boton <b>"Agregar Bolsa"</b>.</p>
+    </div>
+<?php
+}
+?>
+
+
+
+
 <br><br><br><br><br><br><br><br><br><br>
 	</div>
 </div>
 </section>
 
-
-
-
-
-
 <script type="text/javascript">
-        function thePDF() {
+ // Cargar las opciones del combo al cargar la página
+ $.get("./?action=listtipoinsumo", function(data){
+                $("#tipo_insumo").html(data);
+            });
+
+$('#tipo_insumo').change(function() {
+    var tipoInsumo = $(this).val();
+    if (tipoInsumo == 1) {
+        $('#product_table').show();
+        $('#bag_table').hide();
+    } else if (tipoInsumo == 2) {
+        $('#product_table').hide();
+        $('#bag_table').show();
+    } else {
+        $('#product_table').hide();
+        $('#bag_table').hide();
+    }
+});
+
+function thePDF() {
 var doc = new jsPDF('p', 'pt');
         doc.setFontSize(26);
         doc.text("<?php echo ConfigurationData::getByPreffix("company_name")->val;?>", 40, 65);
