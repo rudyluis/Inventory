@@ -26,8 +26,14 @@ class BolsasData {
         return Model::many($query[0], new BolsasData());
     }
 
+    /*public static function getLike($p){
+		$sql = "select * from ".self::$tablename." where (nombre_bolsas like '%$p%' or numero_sachets like '%$p%' or cantidad_minima like '%$p%' or precio_compra like '%$p%') and is_active=1";
+		$query = Executor::doit($sql);
+		return Model::many($query[0],new BolsasData());
+	}*/
+
     public static function getAll() {
-        $sql = "select * from ".self::$tablename." order by id_bolsas desc";
+        $sql = "select * from ".self::$tablename."  where estado=1 order by id_bolsas desc";
         $query = Executor::doit($sql);
         return Model::many($query[0], new BolsasData());
     }
@@ -47,5 +53,44 @@ class BolsasData {
 		$query = Executor::doit($sql);
 		return Model::many($query[0],new BolsasData());
 	}
+
+    public static function delById($id){
+		$sql = "delete from ".self::$tablename." where id=$id";
+		Executor::doit($sql);
+	}
+	public function del(){
+		$sql = "update ".self::$tablename." set estado=0  where id_bolsas=$this->id_bolsas";
+		//$sql = "delete from ".self::$tablename." where id_bolsas=$this->id_bolsas";
+		return Executor::doit($sql);
+	}
+
+
+
+	public static function getLike2($p){
+		$sql = "select * from ".self::$tablename." where (nombre_bolsas like '%$p%' or numero_sachets like '%$p%' or cantidad_minima like '%$p%' or precio_compra like '%$p%') and is_active=1";
+		$query = Executor::doit($sql);
+		return Model::many($query[0],new BolsasData());
+	}
+
+    public static function getBolsaProducto($id_producto, $id_bolsa){
+		$sql = "select count(id_bolsa) as id_bolsa from producto_bolsas where id_bolsa = $id_bolsa and id_producto=$id_producto and estado=1 order by id_producto_bolsas desc limit 1";
+		$query = Executor::doit($sql);
+		return Model::many($query[0],new BolsasData());
+	}
+	
+	public static function getAllByUserId($user_id){
+		$sql = "select * from ".self::$tablename." where id_usuario=$user_id order by fecha_creado desc";
+		$query = Executor::doit($sql);
+		return Model::many($query[0],new BolsasData());
+	}
+	
+	public function producto_bolsa_add(){
+		$sql = "insert into producto_bolsas(id_producto, id_bolsa, numero_sachets_utilizado, id_usuario_registro, estado) ";
+		$sql .= "values (\"$this->id_producto\",\"$this->id_bolsa\",\"$this->numero_sachets_utilizado\", \"$this->id_usuario_registro\", 1)";
+		return Executor::doit($sql);
+	}
+	
+
+
 }
 ?>
