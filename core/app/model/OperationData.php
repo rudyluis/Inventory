@@ -187,6 +187,52 @@ public static function getPPByDateOfficial($start,$end){
 		return $q;
 	}
 
+
+	public static function getQByBagStock($bag_id, $stock_id) {
+		$q = 0;
+		$operations = self::getAllByBagIdAndStock($bag_id, $stock_id);
+		$input_id = OperationTypeData::getByName("entrada")->id;
+		$output_id = OperationTypeData::getByName("salida")->id;
+		
+		foreach($operations as $operation) {
+			if($operation->operation_type_id == $input_id) { 
+				$q += $operation->q; 
+			} else if($operation->operation_type_id == $output_id) {  
+				$q += (-$operation->q); 
+			}
+		}
+		return $q;
+	}
+
+	public static function getRByBagStock($bag_id, $stock_id) {
+		$q = 0;
+		$operations = self::getAllByBagIdAndStock($bag_id, $stock_id);
+		$input_id = OperationTypeData::getByName("entrada-pendiente")->id;
+		
+		foreach($operations as $operation) {
+			if($operation->operation_type_id == $input_id) { 
+				$q += $operation->q; 
+			}
+		}
+		return $q;
+	}
+	
+	public static function getDByBagStock($bag_id, $stock_id) {
+		$q = 0;
+		$operations = self::getAllByBagIdAndStock($bag_id, $stock_id);
+		$input_id = OperationTypeData::getByName("salida-pendiente")->id;
+		
+		foreach($operations as $operation) {
+			if($operation->operation_type_id == $input_id) { 
+				$q += $operation->q; 
+			}
+		}
+		return $q;
+	}
+	
+
+
+
 	public static function getAllByProductIdCutId($product_id,$cut_id){
 		$sql = "select * from ".self::$tablename." where product_id=$product_id and cut_id=$cut_id order by created_at desc";
 		$query = Executor::doit($sql);
@@ -211,6 +257,14 @@ public static function getPPByDateOfficial($start,$end){
 		$query = Executor::doit($sql);
 		return Model::many($query[0],new OperationData());
 	}
+
+	public static function getAllByBagIdAndStock($bag_id, $stock_id) {
+		$sql = "select * from " . self::$tablename . " where id_bolsa=$bag_id and stock_id=$stock_id and is_draft=0 and status=1 order by created_at desc";
+		
+		$query = Executor::doit($sql);
+		return Model::many($query[0], new OperationData());
+	}
+	
 
 	public static function getAllByProductIdCutIdOficial($product_id,$cut_id){
 		$sql = "select * from ".self::$tablename." where product_id=$product_id and cut_id=$cut_id order by created_at desc";
@@ -269,7 +323,17 @@ public static function getPPByDateOfficial($start,$end){
 		return $q;
 	}
 
-
+	public static function getInputQByBagStock($bag_id, $stock_id) {
+		$q = 0;
+		$operations = self::getInputByBagIdAndStock($bag_id, $stock_id);
+		$input_id = OperationTypeData::getByName("entrada")->id;
+		foreach($operations as $operation) {
+			if($operation->operation_type_id == $input_id) {
+				$q += $operation->q;
+			}
+		}
+		return $q;
+	}
 
 	public static function getOutputByProductIdCutId($product_id,$cut_id){
 		$sql = "select * from ".self::$tablename." where product_id=$product_id and cut_id=$cut_id and operation_type_id=2 order by created_at desc";
@@ -317,6 +381,13 @@ public static function getPPByDateOfficial($start,$end){
 		$query = Executor::doit($sql);
 		return Model::many($query[0],new OperationData());
 	}
+
+	public static function getInputByBagIdAndStock($bag_id, $stock_id) {
+		$sql = "select * from ".self::$tablename." where id_bolsa= $bag_id and operation_type_id = 1 and stock_id = $stock_id order by created_at desc";
+		$query = Executor::doit($sql);
+		return Model::many($query[0], new OperationData());
+	}
+	
 
 	public static function getInputByProductIdCutIdYesF($product_id,$cut_id){
 		$sql = "select * from ".self::$tablename." where product_id=$product_id and cut_id=$cut_id and operation_type_id=1 order by created_at desc";

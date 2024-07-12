@@ -132,9 +132,9 @@ if(count($bolsas) > 0) {
     <?php 
     foreach($bolsas as $bolsa):
         // Assuming you have equivalent methods for getting bolsa-specific stock data
-        $r = OperationData::getRByStock($bolsa->id_bolsas, $_GET["stock"]);
-        $q = OperationData::getQByStock($bolsa->id_bolsas, $_GET["stock"]);
-        $d = OperationData::getDByStock($bolsa->id_bolsas, $_GET["stock"]);
+        $r = OperationData::getRByBagStock($bolsa->id_bolsas, $_GET["stock"]);
+        $q = OperationData::getQByBagStock($bolsa->id_bolsas, $_GET["stock"]);
+        $d = OperationData::getDByBagStock($bolsa->id_bolsas, $_GET["stock"]);
     ?>
     <tr class="<?php if($q <= $bolsa->cantidad_minima / 2) { echo "danger"; } else if($q <= $bolsa->cantidad_minima) { echo "warning"; } ?>">
         <td><?php echo $bolsa->id_bolsas; // Assuming 'id_bolsas' is used as the code ?></td>
@@ -146,7 +146,7 @@ if(count($bolsas) > 0) {
             <?php if(Core::$user->kind == 1): ?>
                 <a href="index.php?view=inventaryadd&bag_id=<?php echo $bolsa->id_bolsas; ?>&stock=<?php echo $_GET["stock"];?>" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-plus"></i> Agregar</a>
                 <a href="index.php?view=inventarysub&bag_id=<?php echo $bolsa->id_bolsas; ?>&stock=<?php echo $_GET["stock"];?>" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-minus"></i> Quitar</a>
-                <a href="index.php?view=history&bag_id=<?php echo $bolsa->id_bolsas; ?>&stock=<?php echo $_GET["stock"];?>" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-time"></i> Historial</a>
+                <a href="index.php?view=historybag&bag_id=<?php echo $bolsa->id_bolsas; ?>&stock=<?php echo $_GET["stock"];?>" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-time"></i> Historial</a>
             <?php endif; ?>
         </td>
     </tr>
