@@ -13,9 +13,7 @@ $clients = PersonData::getClients();
 				<!-- Aquí se agrega el combo de selección de tipo de insumo -->
 				<select name="insumo_type" id="insumo_type" class="form-control">
 					<option value="">-- Tipo de Insumo --</option>
-					<option value="1">Tipo 1</option>
-					<option value="2">Tipo 2</option>
-					<option value="3">Tipo 3</option>
+					
 				</select>
 			</div>
 			<Script>
@@ -51,7 +49,7 @@ $clients = PersonData::getClients();
 				</div>
 				<script>
 					
-					alert(sel);
+					
 					<?php 
 						echo "var c=0;";
 						echo "var dates=Array();";
