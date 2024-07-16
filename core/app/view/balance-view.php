@@ -51,11 +51,13 @@ $clients = PersonData::getClients();
 				</div>
 				<script>
 					
+					alert(sel);
 					<?php 
 						echo "var c=0;";
 						echo "var dates=Array();";
 						echo "var data=Array();";
 						echo "var total=Array();";
+						echo "var sel=".isset($_GET["insumo_type"]) .";alert(sel);";
 						for($i=$sd;$i<=$ed;$i+=(60*60*24)){
 							$operations = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),2,$sel);
 							$res = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),1,$sel);
