@@ -325,8 +325,18 @@ public function add_with_client(){
 	}
 
 
-		public static function getGroupByDateOp($start,$end,$op){
-  $sql = "select id,sum(total) as tot,discount,sum(total-discount) as t,count(*) as c from ".self::$tablename." where date(created_at) >= \"$start\" and date(created_at) <= \"$end\" and operation_type_id=$op and p_id!=4";
+	public static function getGroupByDateOp($start,$end,$op,$tip){
+		if($tip==1){
+			$bolsa_sql=" and o.id_bolsa is  null ";
+		}
+		else{
+			$bolsa_sql=" and o.id_bolsa is not null ";
+		}
+  		$sql = "select s.id  as id,sum(total) as tot,discount,sum(total-discount) as t,count(*) as c from ".self::$tablename.
+		" s left join operation o  on o.sell_id= s.id 
+		 where date(s.created_at) >= \"$start\" and date(s.created_at) <= \"$end\" and s.operation_type_id=$op and p_id!=4 ".
+		 $bolsa_sql;
+		//echo($sql);exit();
 		$query = Executor::doit($sql);
 		return Model::many($query[0],new SellData());
 	}
