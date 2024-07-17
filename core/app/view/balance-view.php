@@ -4,8 +4,11 @@ $clients = PersonData::getClients();
 <section class="content">
 <div class="row">
 	<div class="col-md-12">
-	<h1>Balance (Ingresos - Egresos = Utilidad)</h1>
-
+	<?php
+		$insumo_type = isset($_GET["insumo_type"]) ? intval($_GET["insumo_type"]) : 1; // Captura el valor del insumo_type
+		$insumo_text = $insumo_type == 1 ? "- Producto" : ($insumo_type == 2 ? "- Materia Prima" : "");
+	?>
+	<h1>Balance (Ingresos - Egresos = Utilidad) <?php echo $insumo_text; ?></h1>
 	<form>
 		<input type="hidden" name="view" value="balance">
 		<div class="row">
@@ -13,13 +16,15 @@ $clients = PersonData::getClients();
 				<!-- Aquí se agrega el combo de selección de tipo de insumo -->
 				<select name="insumo_type" id="insumo_type" class="form-control">
 					<option value="">-- Tipo de Insumo --</option>
+					<option value="1">Producto</option>
+					<option value="2">Materia Prima</option>
 					
 				</select>
 			</div>
 			<Script>
-				$.get("./?action=listtipoinsumo", function(data){
+				/*$.get("./?action=listtipoinsumo", function(data){
 						$("#insumo_type").html(data);
-					});
+					});*/
 			</Script>
 			<div class="col-md-3">
 				<input type="date" name="sd" value="<?php if(isset($_GET["sd"])){ echo $_GET["sd"]; }?>" class="form-control">
@@ -55,7 +60,7 @@ $clients = PersonData::getClients();
 						echo "var dates=Array();";
 						echo "var data=Array();";
 						echo "var total=Array();";
-						echo "var sel=".isset($_GET["insumo_type"]) .";alert(sel);";
+						echo "var sel=".isset($_GET["insumo_type"]) .";";
 						for($i=$sd;$i<=$ed;$i+=(60*60*24)){
 							$operations = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),2,$sel);
 							$res = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),1,$sel);

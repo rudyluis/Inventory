@@ -9,8 +9,8 @@ if(Core::$user->kind==3){ Core::redir("./?view=sell"); }
   $ntot = 0;
   $nsells = 0;
 for($i=$sd;$i<=$ed;$i+=(60*60*24)){
-  $operations = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),2);
-  $res = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),1);
+  $operations = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),2,1);
+  $res = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),1,1);
   $spends = SpendData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i));
 //  echo $operations[0]->t;
   $sr = $res[0]->tot!=null?$res[0]->tot:0;
@@ -131,8 +131,8 @@ echo "var dates=Array();";
 echo "var data=Array();";
 echo "var total=Array();";
 for($i=$sd;$i<=$ed;$i+=(60*60*24)){
-  $operations = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),2);
-  $res = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),1);
+  $operations = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),2,1);
+  $res = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),1,1);
   $spends = SpendData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i));
 //  echo $operations[0]->t;
   $sr = $res[0]->tot!=null?$res[0]->tot:0;
